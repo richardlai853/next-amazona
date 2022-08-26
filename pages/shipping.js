@@ -14,7 +14,7 @@ import { Store } from '../utils/Store';
 import Cookies from 'js-cookie';
 import { Controller, useForm } from 'react-hook-form';
 import { useSnackbar } from 'notistack';
-import CheckoutWizard from '../components/checkoutWizard';
+import CheckoutWizard from '../components/CheckoutWizard';
 
 export default function Shipping() {
   const {
@@ -82,6 +82,7 @@ export default function Shipping() {
               defaultValue=""
               rules={{
                 required: true,
+                minLength: 3,
               }}
               render={({ field }) => (
                 <TextField
@@ -90,7 +91,13 @@ export default function Shipping() {
                   id="fullName"
                   label="Full Name"
                   error={Boolean(errors.fullName)}
-                  helperText={errors.fullName ? 'full Name is required' : ''}
+                  helperText={
+                    errors.fullName
+                      ? errors.fullName.type === 'minLength'
+                        ? 'minimun 3 letters'
+                        : 'full Name is required'
+                      : ''
+                  }
                   {...field}
                 ></TextField>
               )}
@@ -103,6 +110,7 @@ export default function Shipping() {
               defaultValue=""
               rules={{
                 required: true,
+                minLength: 3,
               }}
               render={({ field }) => (
                 <TextField
@@ -124,6 +132,7 @@ export default function Shipping() {
               defaultValue=""
               rules={{
                 required: true,
+                minLength: 3,
               }}
               render={({ field }) => (
                 <TextField
@@ -145,6 +154,7 @@ export default function Shipping() {
               defaultValue=""
               rules={{
                 required: true,
+                minLength: 3,
               }}
               render={({ field }) => (
                 <TextField
@@ -168,6 +178,7 @@ export default function Shipping() {
               defaultValue=""
               rules={{
                 required: true,
+                minLength: 3,
               }}
               render={({ field }) => (
                 <TextField
