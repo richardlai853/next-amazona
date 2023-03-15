@@ -6,7 +6,7 @@ import {
   TextField,
   Typography,
 } from '@material-ui/core';
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext } from 'react';
 import Layout from '../components/Layout';
 import useStyles from '../utils/style';
 import NextLink from 'next/link';
@@ -25,10 +25,9 @@ export default function Register() {
   } = useForm();
 
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
-  const { state, dispatch } = useContext(Store);
+  const { dispatch } = useContext(Store);
   const router = useRouter();
   const { redirect } = router.query;
-  const { userInfo } = state;
   const classes = useStyles();
   const submitHandler = async ({ name, email, password, confirmPassowrd }) => {
     closeSnackbar();
