@@ -88,6 +88,11 @@ function AdminDashboard() {
                   <ListItemText primary="Orders"></ListItemText>
                 </ListItem>
               </NextLink>
+              <NextLink href="/admin/bookings" passHref>
+                <ListItem button component="a">
+                  <ListItemText primary="Bookings"></ListItemText>
+                </ListItem>
+              </NextLink>
             </List>
           </Card>
         </Grid>

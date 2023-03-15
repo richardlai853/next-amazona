@@ -13,7 +13,6 @@ import { useRouter } from 'next/router';
 import { Store } from '../utils/Store';
 import Cookies from 'js-cookie';
 import { Controller, useForm } from 'react-hook-form';
-import { useSnackbar } from 'notistack';
 import CheckoutWizard from '../components/CheckoutWizard';
 
 export default function Shipping() {
@@ -24,7 +23,6 @@ export default function Shipping() {
     setValue,
   } = useForm();
 
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const { state, dispatch } = useContext(Store);
   const router = useRouter();
   const {

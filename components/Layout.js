@@ -16,6 +16,8 @@ import {
   Menu,
   MenuItem,
 } from '@material-ui/core';
+import IconButton from '@material-ui/core/IconButton';
+import HomeIcon from '@material-ui/icons/Home';
 import useStyles from '../utils/style';
 import { Store } from '../utils/Store';
 import Cookies from 'js-cookie';
@@ -83,9 +85,22 @@ export default function Layout({ title, description, children }) {
         <CssBaseline />
         <AppBar position="static" className={classes.navbar}>
           <Toolbar>
+            <IconButton
+              edge="start"
+              className={classes.menuButton}
+              color="primary"
+              aria-label="menu"
+            >
+              <HomeIcon />
+            </IconButton>
             <NextLink href="/" passHref>
               <Link>
-                <Typography className={classes.brand}>Amazona</Typography>
+                <Typography className={classes.brand}>Products</Typography>
+              </Link>
+            </NextLink>
+            <NextLink href="/booking" passHref>
+              <Link>
+                <Typography className={classes.brand}>Booking</Typography>
               </Link>
             </NextLink>
             <div className={classes.grow}></div>

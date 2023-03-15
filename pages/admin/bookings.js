@@ -29,7 +29,7 @@ function reducer(state, action) {
     case 'FETCH_REQUEST':
       return { ...state, loading: true, error: '' };
     case 'FETCH_SUCCESS':
-      return { ...state, loading: false, orders: action.payload, error: '' };
+      return { ...state, loading: false, bookings: action.payload, error: '' };
     case 'FETCH_FAIL':
       return { ...state, loading: false, error: action.payload };
     default:
@@ -43,9 +43,9 @@ function AdminDashboard() {
   const classes = useStyles();
   const { userInfo } = state;
 
-  const [{ loading, error, orders }, dispatch] = useReducer(reducer, {
+  const [{ loading, error, bookings }, dispatch] = useReducer(reducer, {
     loading: true,
-    orders: [],
+    bookings: [],
     error: '',
   });
 
@@ -56,7 +56,7 @@ function AdminDashboard() {
     const fetchData = async () => {
       try {
         dispatch({ type: 'FETCH_REQUEST' });
-        const { data } = await axios.get(`/api/admin/orders`, {
+        const { data } = await axios.get(`/api/admin/bookings`, {
           headers: { authorization: `Bearer ${userInfo.token}` },
         });
         dispatch({ type: 'FETCH_SUCCESS', payload: data });
@@ -67,7 +67,7 @@ function AdminDashboard() {
     fetchData();
   }, []);
   return (
-    <Layout title="Orders">
+    <Layout title="Bookings">
       <Grid container spacing={1}>
         <Grid item md={3} xs={12}>
           <Card className={classes.section}>
@@ -78,12 +78,12 @@ function AdminDashboard() {
                 </ListItem>
               </NextLink>
               <NextLink href="/admin/orders" passHref>
-                <ListItem selected button component="a">
+                <ListItem button component="a">
                   <ListItemText primary="Orders"></ListItemText>
                 </ListItem>
               </NextLink>
               <NextLink href="/admin/bookings" passHref>
-                <ListItem button component="a">
+                <ListItem selected button component="a">
                   <ListItemText primary="Bookings"></ListItemText>
                 </ListItem>
               </NextLink>
@@ -95,7 +95,7 @@ function AdminDashboard() {
             <List>
               <ListItem>
                 <Typography component="h1" variant="h1">
-                  Orders
+                  Bookings
                 </Typography>
               </ListItem>
 
@@ -112,33 +112,46 @@ function AdminDashboard() {
                           <TableCell>ID</TableCell>
                           <TableCell>USER</TableCell>
                           <TableCell>DATE</TableCell>
-                          <TableCell>TOTAL</TableCell>
+                          <TableCell>PHONE</TableCell>
+                          <TableCell>REMARK</TableCell>
                           <TableCell>PAID</TableCell>
                           <TableCell>DELIVERED</TableCell>
                           <TableCell>ACTION</TableCell>
                         </TableRow>
                       </TableHead>
                       <TableBody>
-                        {orders.map((order) => (
-                          <TableRow key={order._id}>
-                            <TableCell>{order._id.substring(20, 24)}</TableCell>
+                        {bookings.map((booking) => (
+                          <TableRow key={booking._id}>
                             <TableCell>
-                              {order.user ? order.user.name : 'DELETED USER'}
+                              {booking._id.substring(20, 24)}
                             </TableCell>
-                            <TableCell>{order.createdAt}</TableCell>
-                            <TableCell>${order.totalPrice}</TableCell>
                             <TableCell>
-                              {order.isPaid
-                                ? `paid at ${order.paidAt}`
+                              {booking.user
+                                ? booking.user.name
+                                : 'DELETED USER'}
+                            </TableCell>
+                            <TableCell>
+                              {booking.date
+                                ? new Date(booking.date).toLocaleDateString()
+                                : ''}
+                            </TableCell>
+                            <TableCell>{booking.phone}</TableCell>
+                            <TableCell>{booking.remark}</TableCell>
+                            <TableCell>
+                              {booking.isPaid
+                                ? `paid at ${booking.paidAt}`
                                 : 'not paid'}
                             </TableCell>
                             <TableCell>
-                              {order.isDelivered
-                                ? `delivered at ${order.deliveredAt}`
+                              {booking.isDelivered
+                                ? `delivered at ${booking.deliveredAt}`
                                 : 'not delivered'}
                             </TableCell>
                             <TableCell>
-                              <NextLink href={`/order/${order._id}`} passHref>
+                              <NextLink
+                                href={`/booking/${booking._id}`}
+                                passHref
+                              >
                                 <Button variant="contained">Details</Button>
                               </NextLink>
                             </TableCell>

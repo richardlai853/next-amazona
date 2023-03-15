@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useReducer, useState } from 'react';
+import React, { useContext, useEffect, useReducer } from 'react';
 import dynamic from 'next/dynamic';
 import Layout from '../../components/Layout';
 import { Store } from '../../utils/Store';
@@ -125,44 +125,8 @@ function Order({ params }) {
 
   const { closeSnackbar, enqueueSnackbar } = useSnackbar();
 
-  function createOrder(data, actions) {
-    return actions.order
-      .create({
-        purchase_units: [
-          {
-            amount: { value: totalPrice },
-          },
-        ],
-      })
-      .then((orderID) => {
-        return orderID;
-      });
-  }
-  function onApprove(data, actions) {
-    return actions.order.capture().then(async function (details) {
-      try {
-        dispatch({ type: 'PAY_REQUEST' });
-        const { data } = await axios.put(
-          `/api/orders/${order._id}/pay`,
-          details,
-          {
-            headers: { authorization: `Bearer ${userInfo.token}` },
-          }
-        );
-        dispatch({ type: 'PAY_SUCCESS', payload: data });
-        enqueueSnackbar('Order is paid', { variant: 'success' });
-      } catch (err) {
-        dispatch({ type: 'PAY_FAIL', payload: getError(err) });
-        enqueueSnackbar(getError(err), { variant: 'error' });
-      }
-    });
-  }
-
-  function onError(err) {
-    enqueueSnackbar(getError(err), { variant: 'error' });
-  }
-
   async function deliverOrderHandler() {
+    closeSnackbar();
     try {
       dispatch({ type: 'DELIVER_REQUEST' });
       const { data } = await axios.put(
@@ -181,6 +145,7 @@ function Order({ params }) {
   }
 
   async function payOrderHandler() {
+    closeSnackbar();
     try {
       dispatch({ type: 'PAY_REQUEST' });
       const { data } = await axios.put(

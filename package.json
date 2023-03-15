@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "@material-ui/core": "^4.12.4",
+    "@material-ui/icons": "^4.11.3",
+    "@material-ui/pickers": "^3.3.10",
     "axios": "^0.27.2",
     "bcryptjs": "^2.4.3",
     "chart.js": "^3.9.1",
@@ -20,9 +22,13 @@
     "next-connect": "^0.13.0",
     "notistack": "^1.0.10",
     "react": "18.2.0",
+    "react-big-calendar": "^1.6.8",
+    "react-calendar": "^4.0.0",
     "react-chartjs-2": "^4.3.1",
     "react-dom": "18.2.0",
-    "react-hook-form": "^7.34.2"
+    "react-hook-form": "^7.34.2",
+    "react-modern-calendar-datepicker": "^3.1.6",
+    "react-no-ssr": "^1.1.0"
   },
   "devDependencies": {
     "eslint": "8.21.0",
