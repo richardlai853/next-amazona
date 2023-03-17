@@ -12,13 +12,17 @@ handler.use(isAuth);
 
 handler.post(async (req, res) => {
   await db.connect();
-  const newBooking = new Booking({
-    ...req.body,
-    user: req.user._id,
-  });
-  const order = await newBooking.save();
-
-  res.status(201).send(order);
+  const oldOrder = await Booking.findOne({ date: req.body.date }).exec();
+  if (oldOrder == null) {
+    const newBooking = new Booking({
+      ...req.body,
+      user: req.user._id,
+    });
+    const order = await newBooking.save();
+    res.status(201).send(order);
+  } else {
+    res.status(409).send('already booked');
+  }
 
   await db.disconnect();
 });

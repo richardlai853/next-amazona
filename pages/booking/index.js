@@ -30,15 +30,29 @@ function PlaceOrder() {
     formState: { errors },
   } = useForm();
 
+  const [bookedDates, setBookedDates] = useState([]);
+
+  const fetchData = () => {
+    if (userInfo) {
+      return fetch('/api/bookings/booked', {
+        header: { authorization: `Bearer ${userInfo.token}` },
+      })
+        .then((response) => response.json())
+        .then((data) => setBookedDates(data));
+    }
+  };
+
   useEffect(() => {
     if (!userInfo) {
       router.push('/login');
     }
+    fetchData();
   }, []);
+
   const { closeSnackbar, enqueueSnackbar } = useSnackbar();
-  const { state, dispatch } = useContext(Store);
+  const { state } = useContext(Store);
   const [loading, setLoading] = useState(false);
-  const [selectedDay, setSelectedDay] = useState(new Date());
+  const [selectedDay, setSelectedDay] = useState();
   const router = useRouter();
   const classes = useStyles();
 
@@ -54,6 +68,9 @@ function PlaceOrder() {
 
   const markBooking = async ({ date, remark, phone }) => {
     closeSnackbar();
+    if (!selectedDay) {
+      return enqueueSnackbar('You must Select a day', { variant: 'error' });
+    }
     try {
       setLoading(true);
       date = selectedDay;
@@ -74,29 +91,43 @@ function PlaceOrder() {
       router.push(`/booking/${data._id}`);
     } catch (err) {
       setLoading(false);
-      enqueueSnackbar(getError(err), { variant: 'error' });
+      if (err.response.status == 409) {
+        enqueueSnackbar('Date already booked', { variant: 'error' });
+      } else {
+        enqueueSnackbar(getError(err), { variant: 'error' });
+      }
     }
   };
-  const tileDisabled = ({ activeStartDate, date, view }) => {
-    return date < new Date();
+
+  const booked = [];
+
+  bookedDates.forEach((bookDate) => {
+    booked.push(new Date(bookDate.date).toLocaleDateString());
+  });
+
+  const tileDisabled = ({ date }) => {
+    return date < new Date() || booked.includes(date.toLocaleDateString());
   };
 
   return (
     <Layout title="Mark Booking">
       <div style={styles.container}>
-        <Grid container spacing={1}>
+        <Grid container spacing={3}>
           <Grid item md={6} xs={12}>
             <Calendar
               value={selectedDay}
               onChange={setSelectedDay}
               calendarType="US"
               tileDisabled={tileDisabled}
+              className={classes.fullWidth}
+              minDetail="month"
             />
           </Grid>
           <Grid item md={6} xs={12}>
             <form className={classes.form} onSubmit={handleSubmit(markBooking)}>
               <Typography component="h1" variant="h1">
-                Seleded Date: {selectedDay.toLocaleDateString()}
+                Seleded Date:{' '}
+                {selectedDay ? selectedDay.toLocaleDateString() : ''}
               </Typography>
               <List>
                 <ListItem>
@@ -113,7 +144,7 @@ function PlaceOrder() {
                         fullWidth
                         id="phone"
                         label="Phone"
-                        inputProps={{ type: 'text' }}
+                        inputProps={{ type: 'number' }}
                         error={Boolean(errors.phone)}
                         helperText={
                           errors.phone

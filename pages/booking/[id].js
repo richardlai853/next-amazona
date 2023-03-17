@@ -2,12 +2,13 @@ import React, { useContext, useEffect, useReducer } from 'react';
 import dynamic from 'next/dynamic';
 import Layout from '../../components/Layout';
 import { Store } from '../../utils/Store';
-import NextLink from 'next/link';
-import Image from 'next/image';
 import {
   Grid,
+  CardContent,
+  CardActionArea,
+  CardActions,
+  CardMedia,
   Typography,
-  Link,
   CircularProgress,
   Button,
   Card,
@@ -168,12 +169,35 @@ function Booking({ params }) {
         <Grid container spacing={2}>
           <Grid item md={7} xs={12}>
             <Card className={classes.section}>
-              <List>
-                <ListItem>{user.name}</ListItem>
-                <ListItem>{new Date(date).toLocaleDateString()}</ListItem>
-                <ListItem>{remark}</ListItem>
-                <ListItem>{phone}</ListItem>
-              </List>
+              <CardActionArea>
+                <CardContent>
+                  <CardMedia
+                    className={classes.media}
+                    component="img"
+                    image="/images/new-year.jpg"
+                  />
+                  <Typography
+                    color="primary"
+                    gutterBottom
+                    variant="h4"
+                    component="h2"
+                  >
+                    {user.name}
+                  </Typography>
+                  <Typography gutterBottom variant="h5" component="h3">
+                    {new Date(date).toLocaleDateString()}
+                  </Typography>
+                  Contact: {phone}, Remark: {remark}
+                </CardContent>
+              </CardActionArea>
+              <CardActions>
+                <Button variant="outlined" size="small" color="inherit">
+                  Share
+                </Button>
+                <Button variant="outlined" size="small" color="inherit">
+                  Add to Calender
+                </Button>
+              </CardActions>
             </Card>
           </Grid>
           <Grid item md={5} xs={12}>
@@ -189,14 +213,9 @@ function Booking({ params }) {
             </Card>
             <Card className={classes.section}>
               <List>
+                <ListItem>Payment Method: {paymentMethod}</ListItem>
                 <ListItem>
-                  <Typography component="h2" variant="h2">
-                    Payment Method
-                  </Typography>
-                </ListItem>
-                <ListItem>{paymentMethod}</ListItem>
-                <ListItem>
-                  Status: {isPaid ? `paid at ${paidAt}` : 'not paid'}
+                  Payment Status: {isPaid ? `paid at ${paidAt}` : 'not paid'}
                 </ListItem>
               </List>
             </Card>

@@ -46,6 +46,9 @@ const useStyles = makeStyles({
   fullWidth: {
     width: '100%',
   },
+  media: {
+    height: 140,
+  },
 });
 
 export default useStyles;
